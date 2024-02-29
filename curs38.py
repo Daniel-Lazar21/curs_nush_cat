@@ -56,22 +56,33 @@ def copiaza_cvs_in_baza():
                     with open("curs38\fail.txt",'a') as txt_file:
                         txt_file.write(str(e) +"  "+ query)
 
-def cauta_orasele_unei_tari(tara:str):
-    orase = my_conn.execute_select_query(f'SELECT city_ascii FROM orase where country = "{tara}"')
-    return [oras[0] for oras in orase]
+class Country():
+    def __init__(self,name):
+        self.name = name
+    
+    def get_cities(self):
+        orase = my_conn.execute_select_query(f'SELECT city_ascii FROM orase where country = "{self.name}"')
+        return [oras[0] for oras in orase]
+    
+    def get_capital(self):
+        capitala = my_conn.execute_select_query(f"SELECT city_ascii FROM orase where country ='{self.name}' and capital = 'primary' ")
+        return capitala[0][0]
+    
+    def get_administrative_cities(self):
+        admin_cit = my_conn.execute_select_query(f"SELECT city_ascii FROM orase where country ='{self.name}' and capital = 'admin' ")
+        return [oras[0] for oras in admin_cit]
+    
+    def get_minor_cities(self):
+        minor_cit = my_conn.execute_select_query(f"SELECT city_ascii FROM orase where country ='{self.name}' and capital = 'minor' ")
+        return [oras[0] for oras in minor_cit]
 
-print(cauta_orasele_unei_tari("Japan"))
 
+my_country = Country("Japan")
 
-# -creati un nou repository pe contul vostru de github 
-# -clonati repository-ul local 
-# -adaugati codul de la problema anterioara si faceti push catre repository-ul principal 
-# -creati un nou branch numit implement-poo-solution
-# -mutati-va pe noul branch si creati o clasa numita Country care sa aiba urmatoarele metode:
-# init(name): se va crea o clasa care va retine numele tarii
-# get_cities(): returneaza toate orasele tarii respective (nu le stocheaza in memorie! executa un query si intoarce rezultatul)
-# get_capital(): returenaza capitala tarii respective
-# get_administrative_cities(): returneaza toate orasele administrative
-# get_minor_cities(): returneaza orasele minore
-
-# -merge-uiti modificarile in branchul master
+print(my_country.get_cities())
+print("===============================================")
+print(my_country.get_capital())
+print("===============================================")
+print(my_country.get_administrative_cities())
+print("===============================================")
+print(my_country.get_minor_cities())
